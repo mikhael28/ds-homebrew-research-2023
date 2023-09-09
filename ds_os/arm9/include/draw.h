@@ -1,0 +1,87 @@
+﻿#ifndef _DRAW_H_
+#define _DRAW_H_
+#include "gba-jpeg-decode.h"
+#define S_WIDTH 256
+#define S_HEIGHT 192
+
+#ifdef __GNUC__
+ #define __PACKED __attribute__ ((__packed__))
+#else
+ #define __PACKED 
+ #pragma pack(1)
+#endif
+
+/* Errors for read_png(); */
+
+#define     READPNG_SUCCESS                     0
+#define     READPNG_BADSIG                      1
+#define     READPNG_CREATEREADSTRUCT_ERROR      2
+#define     READPNG_CREATEINFOSTRUCT_ERROR      3
+#define     READPNG_INITIO_ERROR                4
+#define     READPNG_READIMG_ERROR               5
+
+/* Flags for read_png(); */
+
+#define     READPNG_WITH_PALETTE                1
+
+/* Macros */
+
+#define     GETRED24(p)                    (p)
+#define     GETGREEN24(p)                  (p+1)
+#define     GETBLUE24(p)                   (p+2)
+#define     GETALPHA24(p)                  (p+3)
+#define     GETPIXEL(p,x,y,w,c)          (p+(x+y*w)*c)
+
+/*#define     RGBA_GETRED24(p)                    (p)
+#define     RGBA_GETGREEN24(p)                  (p+1)
+#define     RGBA_GETBLUE24(p)                   (p+2)
+#define     RGBA_GETALPHA24(p)                  (p+3)
+#define     RGBA_GETPIXEL24(p,x,y,sx)           (p+(x+y*sx)*4)*/
+
+#define     PNG_IS_PALETTE(t)                   (t & PNG_COLOR_MASK_PALETTE)
+#define     PNG_IS_RGB(t)                       (t & PNG_COLOR_MASK_COLOR)
+#define     PNG_IS_RGBA(t)                      (t & PNG_COLOR_MASK_ALPHA)
+
+
+
+extern u16* fb0;
+extern u16* fb1;
+
+typedef struct{
+	u16 Id; // ?
+	u32 Length;
+	u16 Nothing1, Nothing2; // ?
+	u32 offset; // Offset of start of image, start at position 0x0A, which can only be 2-byte aligined
+} __PACKED BMPHeader0;
+
+typedef struct{
+	u32 SizeofHeader; // 40
+	u32 Width, Height;
+	u16 Colorplanes; // Usually 1
+	u16 BitsperPixel; //1, 2, 4, 8, 16, 24, 32
+	u32 Compression;  // 0 for none, 1...
+	u32 SizeofData; // Not reliable
+	u32 WidthperMeter, HeightperMeter; // Don't care
+	u32 NColors, ImportantColors; // Number of colors used, important colors ?
+} __PACKED BMP_Headers;
+
+void InitDrawSystem();
+void DrawSystemUpdate();
+void ResetDrawSystem();
+void PutPixelRGB(bool screen, s16 x, s16 y, u16 RGB);
+u16 GetPixelRGB(bool screen, s16 x, s16 y);
+u8 GetPixelR(bool screen, s16 x, s16 y);
+u8 GetPixelG(bool screen, s16 x, s16 y);
+u8 GetPixelB(bool screen, s16 x, s16 y);
+void DrawLine(bool screen, s16 x1, s16 y1, s16 x2, s16 y2, u16 RGB);
+void DrawRect(bool screen, s16 x1, s16 y1, s16 x2, s16 y2, u16 RGB);
+u16* LoadJPEG(const char* filename, int *width, int *height);
+u16* LoadBMP(const char* filename, int *width, int *height);
+u16* LoadPNG(const char* filename, int *width, int *height);
+void LoadFont(const char* filename);
+void PrintChar(bool screen, s16 x1, s16 y1, const char c, u16 color);
+void Print(bool screen, s16 x1, s16 y1, u16 color, const char* format, ...);
+void DrawImage(bool screen, s16 x1, s16 y1, u16* image, u16 width, u16 height);
+void ScreenShot(bool screen, const char* filename);
+u16* ScaleToScreen(u16* src, u16 width, u16 height);
+#endif

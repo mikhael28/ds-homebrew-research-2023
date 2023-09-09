@@ -1,0 +1,127 @@
+#! /usr/bin/env python
+#
+# Create all .c/.h files from our graphics files
+#
+import os
+import glob
+import re
+
+# regular bitmaps are easy - we convert them with git
+for b in glob.glob("bmp/*.bmp"):
+	(f,e) = os.path.splitext(os.path.basename(b))
+	print f
+	os.spawnlp(
+		os.P_WAIT,
+		"git",		# command to execute
+		"git",		# ARGV[0]
+		b,		# source file
+		"-q",		# quietly
+		"-gu16",	# graphic datatype
+		"-gT!",		# force opaque bit
+		"-ftc",		# file type: .c
+		"-o", f		# output filename
+	)
+
+# segments are a little trickier because
+# a) git screws up paletted graphics bigtime
+# b) we have a different RLE scheme
+#
+# our segments are two-color, WHITE and RED where RED is the
+# mask.
+# "git ... -gb -gB8 -gu8" outputs almost the right thing
+# but it gets color 0 and 1 around the wrong way in the data
+# though not in the palette.
+#
+# so, instead, we use
+# "git -gb -gu16 -gT! -fts -fh!"
+# to temporary .s file, then read that back and output appropriate RLE
+# headers that match *our* conventions
+#
+for b in glob.glob("seg/segment_*.bmp"):
+	(f,e) = os.path.splitext(os.path.basename(b))
+	print f
+	os.spawnlp(
+		os.P_WAIT,
+		"git",		# command to execute
+		"git",		# ARGV[0]
+		b,		# source file
+		"-q",		# quietly
+		"-gu16",	# graphic datatype
+		"-gT!",		# force opaque bit
+		"-fh!",		# suppress .h
+		"-fts",		# file type: .s
+		"-o", "temp"	# output filename
+	)
+
+	# the file consists of lines that look like this:
+	# .hword 0xFFFF,0xFFFF,0x801F,0x801F,0x801F,0x801F,0x801F,0x801F
+	# everything else can be discarded
+	fp = open("temp.s")
+	data = []
+	for line in fp:
+		if not re.match(r"\s+.hword\s", line):
+			continue
+		for h in re.findall("0x[0-9A-F]{4}",line):
+			data.append(h != "0xFFFF")
+	fp.close()
+	os.unlink("temp.s")
+
+	# now do the RLE pass
+	rle = []
+	prev = data[0]
+	cnt = 1
+	for d in data[1:]:
+		if (d==prev) and (cnt<255):
+			cnt += 1
+			continue
+		rle.append((cnt, 1 if prev else 0))
+		cnt = 1
+		prev = d
+
+	if (cnt):
+		rle.append((cnt, 1 if prev else 0))
+
+	# sentinel
+	rle.append((0,0))
+
+	# now we can write the real files out
+	fp = open(f+".h", "w")
+	fp.write( "//\n" )
+	fp.write( "// %s.h\n" % (f) )
+	fp.write( "//\n" )
+	fp.write( "// Do not edit - created by 'update_gfx' from %s\n"%(b) )
+	fp.write( "//\n" )
+	fp.write( "#pragma once\n" )
+	fp.write( "\n" )
+	fp.write( "#ifdef __cplusplus\n" )
+	fp.write( "extern \"C\" {\n" )
+	fp.write( "#endif\n")
+	fp.write( "\n" )
+	fp.write( "extern const unsigned char %s_rle[%d*2] __attribute__ ((aligned(4)));\n" % (f, len(rle)) )
+	fp.write( "\n" )
+	fp.write( "#ifdef __cplusplus\n" )
+	fp.write( "};\n" )
+	fp.write( "#endif\n")
+	fp.close()
+	
+	fp = open(f+".c", "w")
+	fp.write( "//\n" )
+	fp.write( "// %s.c\n" % (f) )
+	fp.write( "//\n" )
+	fp.write( "// Do not edit - created by 'update_gfx' from %s\n"%(b) )
+	fp.write( "//\n" )
+	fp.write( "#include \"%s.h\"\n" %(f) )
+	fp.write( "\n" )
+	fp.write( "#ifdef __cplusplus\n" )
+	fp.write( "extern \"C\" {\n" )
+	fp.write( "#endif\n")
+	fp.write( "\n" )
+	fp.write( "const unsigned char %s_rle[%d*2] __attribute__ ((aligned(4))) = {\n" % (f, len(rle)) )
+	for (c,v) in rle:
+		fp.write( "\t%3d,%d,\n" % (c,v))
+	fp.write( "};\n")
+	fp.write( "\n" )
+	fp.write( "#ifdef __cplusplus\n" )
+	fp.write( "};\n" )
+	fp.write( "#endif\n")
+	fp.close()

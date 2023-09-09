@@ -1,0 +1,55 @@
+LR_NDSROM 0x02000000+0x00000 0x400000-0x00000
+{
+    ER_BootLoader +0
+    {
+        init_tcm.o (INIT946TCM, +FIRST)   ; Core initialisation inc TCM enable
+        __main.o                         ; C Library entry point, must be in a root region
+        *  (Region$$Table)               ; this section must be in a root region 
+        *  (ZISection$$Table)            ; this section must be in a root region
+    }
+    
+    ER_ProgramID +0
+    {
+      ProgramID.o (+RO)
+    }
+    
+    ER_Absolute +0
+    {
+        * (+RO)
+    }
+    
+    ER_RW +0
+    {
+        * (+RW)
+        * (+ZI)
+    }
+    
+    HEAP +0 UNINIT
+    {
+        heap.o (+ZI)                     ; heap follows directly from image data 
+    }
+    
+    ER_ITCM_Global 0x01ff0008 0x800-8
+    {
+      * (ITCM)
+      * (ITCM_MemTool)
+      * (ITCM_GLIB)
+    }
+    
+    ER_DTCM 0x02800000 0x500
+    {
+        * (.dtcm)
+    }
+    
+    ; ----------------------------------------------------------------------------
+    ; Reboot loader request NDSROM loader.
+    
+    EOVR_libglobal_RebootLoader 0x023ff200 0x200 ; IPCÇ∆èdÇ»ÇÁÇ»Ç¢ÇÊÇ§Ç…íçà”
+    {
+        * (.rebootloader)
+    }
+    
+}
+
+
+

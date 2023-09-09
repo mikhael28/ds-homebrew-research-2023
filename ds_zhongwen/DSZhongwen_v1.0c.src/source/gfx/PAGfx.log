@@ -1,0 +1,123 @@
+PAGfx Converter, by Mollusk     www.palib.com
+If you have suggestions, problems, or anything, please mail me at mollusk@palib.info
+
+Converting PAGfx.ini
+Transparent Color : Magenta
+
+90 sprites :
+  up_titulo0100 : 256colors, 64x64, Pal : titulo_Pal, -> up_titulo0100_Sprite
+  up_titulo1000 : 256colors, 64x64, Pal : titulo_Pal, -> up_titulo1000_Sprite
+  up_titzh0100 : 256colors, 64x64, Pal : titulo_Pal, -> up_titzh0100_Sprite
+  up_titzh1000 : 256colors, 64x64, Pal : titulo_Pal, -> up_titzh1000_Sprite
+  up_titulo0001 : 256colors, 64x32, Pal : titulo_Pal, -> up_titulo0001_Sprite
+  up_headerlisten : 256colors, 64x32, Pal : header_Pal, -> up_headerlisten_Sprite
+  up_headerhanzi : 256colors, 64x32, Pal : header_Pal, -> up_headerhanzi_Sprite
+  up_headerhanziattack : 256colors, 64x32, Pal : header_Pal, -> up_headerhanziattack_Sprite
+  up_headernihao : 256colors, 64x32, Pal : header_Pal, -> up_headernihao_Sprite
+  up_headergramm : 256colors, 64x32, Pal : header_Pal, -> up_headergramm_Sprite
+  up_bannernihao10 : 256colors, 64x64, Pal : banner_Pal, -> up_bannernihao10_Sprite
+  up_bannernihao01 : 256colors, 64x32, Pal : banner_Pal, -> up_bannernihao01_Sprite
+  up_bannerlisten10 : 256colors, 64x64, Pal : banner_Pal, -> up_bannerlisten10_Sprite
+  up_bannerlisten01 : 256colors, 64x32, Pal : banner_Pal, -> up_bannerlisten01_Sprite
+  up_bannerhanziattack10 : 256colors, 64x64, Pal : banner_Pal, -> up_bannerhanziattack10_Sprite
+  up_bannerhanziattack01 : 256colors, 64x32, Pal : banner_Pal, -> up_bannerhanziattack01_Sprite
+  up_bannerhanzi10 : 256colors, 64x64, Pal : banner_Pal, -> up_bannerhanzi10_Sprite
+  up_bannerhanzi01 : 256colors, 64x32, Pal : banner_Pal, -> up_bannerhanzi01_Sprite
+  up_bannergramm10 : 256colors, 64x64, Pal : banner_Pal, -> up_bannergramm10_Sprite
+  up_bannergramm01 : 256colors, 64x32, Pal : banner_Pal, -> up_bannergramm01_Sprite
+  up_text10 : 256colors, 32x64, Pal : up_text_Pal, -> up_text10_Sprite
+  up_text01 : 256colors, 32x64, Pal : up_text_Pal, -> up_text01_Sprite
+  up_textscroll01 : 256colors, 32x64, Pal : up_text_Pal, -> up_textscroll01_Sprite
+  up_textscroll10 : 256colors, 32x64, Pal : up_text_Pal, -> up_textscroll10_Sprite
+  up_hidetext10 : 256colors, 32x64, Pal : up_text_Pal, -> up_hidetext10_Sprite
+  up_hidetext01 : 256colors, 32x64, Pal : up_text_Pal, -> up_hidetext01_Sprite
+  smiley_aiya : 256colors, 64x32, Pal : smiley_Pal, -> smiley_aiya_Sprite
+  smiley_bigeye : 256colors, 64x32, Pal : smiley_Pal, -> smiley_bigeye_Sprite
+  smiley_bigeyes : 256colors, 64x32, Pal : smiley_Pal, -> smiley_bigeyes_Sprite
+  smiley_dead : 256colors, 64x32, Pal : smiley_Pal, -> smiley_dead_Sprite
+  smiley_happy : 256colors, 64x32, Pal : smiley_Pal, -> smiley_happy_Sprite
+  smiley_looking : 256colors, 64x32, Pal : smiley_Pal, -> smiley_looking_Sprite
+  smiley_normal : 256colors, 64x32, Pal : smiley_Pal, -> smiley_normal_Sprite
+  smiley_sleepy : 256colors, 64x32, Pal : smiley_Pal, -> smiley_sleepy_Sprite
+  smiley_talking : 256colors, 64x32, Pal : smiley_Pal, -> smiley_talking_Sprite
+  smiley_thinking : 256colors, 64x32, Pal : smiley_Pal, -> smiley_thinking_Sprite
+  smiley_unhappy : 256colors, 64x32, Pal : smiley_Pal, -> smiley_unhappy_Sprite
+  smiley_wink : 256colors, 64x32, Pal : smiley_Pal, -> smiley_wink_Sprite
+  smiley_ : 256colors, 64x32, Pal : smiley_Pal, -> smiley__Sprite
+  smiley_what : 256colors, 64x32, Pal : smiley_Pal, -> smiley_what_Sprite
+  btn32grey100 : 256colors, 16x32, Pal : btn_Pal, -> btn32grey100_Sprite
+  btn32grey010 : 256colors, 16x32, Pal : btn_Pal, -> btn32grey010_Sprite
+  btn32grey001 : 256colors, 16x32, Pal : btn_Pal, -> btn32grey001_Sprite
+  btn32blue100 : 256colors, 16x32, Pal : btn_Pal, -> btn32blue100_Sprite
+  btn32blue010 : 256colors, 16x32, Pal : btn_Pal, -> btn32blue010_Sprite
+  btn32blue001 : 256colors, 16x32, Pal : btn_Pal, -> btn32blue001_Sprite
+  btn32green100 : 256colors, 16x32, Pal : btn_Pal, -> btn32green100_Sprite
+  btn32green010 : 256colors, 16x32, Pal : btn_Pal, -> btn32green010_Sprite
+  btn32green001 : 256colors, 16x32, Pal : btn_Pal, -> btn32green001_Sprite
+  btn32yellow100 : 256colors, 16x32, Pal : btn_Pal, -> btn32yellow100_Sprite
+  btn32yellow010 : 256colors, 16x32, Pal : btn_Pal, -> btn32yellow010_Sprite
+  btn32yellow001 : 256colors, 16x32, Pal : btn_Pal, -> btn32yellow001_Sprite
+  btn32red100 : 256colors, 16x32, Pal : btn_Pal, -> btn32red100_Sprite
+  btn32red010 : 256colors, 16x32, Pal : btn_Pal, -> btn32red010_Sprite
+  btn32red001 : 256colors, 16x32, Pal : btn_Pal, -> btn32red001_Sprite
+  btn32violet100 : 256colors, 16x32, Pal : btn_Pal, -> btn32violet100_Sprite
+  btn32violet010 : 256colors, 16x32, Pal : btn_Pal, -> btn32violet010_Sprite
+  btn32violet001 : 256colors, 16x32, Pal : btn_Pal, -> btn32violet001_Sprite
+  btn32orange100 : 256colors, 16x32, Pal : btn_Pal, -> btn32orange100_Sprite
+  btn32orange010 : 256colors, 16x32, Pal : btn_Pal, -> btn32orange010_Sprite
+  btn32orange001 : 256colors, 16x32, Pal : btn_Pal, -> btn32orange001_Sprite
+  txt_ideograma_sp : 256colors, 64x32, Pal : btntxt_Pal, -> txt_ideograma_sp_Sprite
+  txt_idioma_en : 256colors, 64x32, Pal : btntxt_Pal, -> txt_idioma_en_Sprite
+  txt_idioma_sp : 256colors, 64x32, Pal : btntxt_Pal, -> txt_idioma_sp_Sprite
+  btn64grey100 : 256colors, 32x64, Pal : btn_Pal, -> btn64grey100_Sprite
+  btn64grey010 : 256colors, 32x64, Pal : btn_Pal, -> btn64grey010_Sprite
+  btn64grey001 : 256colors, 32x64, Pal : btn_Pal, -> btn64grey001_Sprite
+  btn64green100 : 256colors, 32x64, Pal : btn_Pal, -> btn64green100_Sprite
+  btn64green010 : 256colors, 32x64, Pal : btn_Pal, -> btn64green010_Sprite
+  btn64green001 : 256colors, 32x64, Pal : btn_Pal, -> btn64green001_Sprite
+  btn64red100 : 256colors, 32x64, Pal : btn_Pal, -> btn64red100_Sprite
+  btn64red010 : 256colors, 32x64, Pal : btn_Pal, -> btn64red010_Sprite
+  btn64red001 : 256colors, 32x64, Pal : btn_Pal, -> btn64red001_Sprite
+  hanzi_template : 256colors, 64x64, Pal : hanzi_Pal, -> hanzi_template_Sprite
+  btn32field100 : 256colors, 16x32, Pal : btn_Pal, -> btn32field100_Sprite
+  btn32field010 : 256colors, 16x32, Pal : btn_Pal, -> btn32field010_Sprite
+  btn32field001 : 256colors, 16x32, Pal : btn_Pal, -> btn32field001_Sprite
+  btn32fieldsel100 : 256colors, 16x32, Pal : btn_Pal, -> btn32fieldsel100_Sprite
+  btn32fieldsel010 : 256colors, 16x32, Pal : btn_Pal, -> btn32fieldsel010_Sprite
+  btn32fieldsel001 : 256colors, 16x32, Pal : btn_Pal, -> btn32fieldsel001_Sprite
+  arrow_r : 256colors, 32x32, Pal : btnima_Pal, -> arrow_r_Sprite
+  arrow_b : 256colors, 32x32, Pal : btnima_Pal, -> arrow_b_Sprite
+  arrow_l : 256colors, 32x32, Pal : btnima_Pal, -> arrow_l_Sprite
+  config : 256colors, 32x32, Pal : btnima_Pal, -> config_Sprite
+  logo_rrc2 : 256colors, 32x32, Pal : btnima_Pal, -> logo_rrc2_Sprite
+  logo_seal : 256colors, 64x64, Pal : seal_Pal, -> logo_seal_Sprite
+  arrow_hanzi : 256colors, 32x32, Pal : btnima_Pal, -> arrow_hanzi_Sprite
+  arrow_play : 256colors, 32x32, Pal : btnima_Pal, -> arrow_play_Sprite
+  btn64nope : 256colors, 64x64, Pal : hanzi_Pal, -> btn64nope_Sprite
+  btn64yeah : 256colors, 64x64, Pal : hanzi_Pal, -> btn64yeah_Sprite
+
+4 backgrounds :
+  logo_rrc : 8bit, 256x192, Pal : logo_rrc_Pal, -> logo_rrc_Bitmap
+  logo_palib : 8bit, 256x192, Pal : logo_palib_Pal, -> logo_palib_Bitmap
+  font_arial : TileBg, 256x192, Pal : font_arial_Pal, 63 tiles -> font_arial_Tiles and font_arial_Map
+  font_system : TileBg, 256x192, Pal : font_system_Pal, 69 tiles -> font_system_Tiles and font_system_Map
+
+14 palettes :
+  titulo_Pal, 33 colors
+  header_Pal, 43 colors
+  banner_Pal, 233 colors
+  up_text_Pal, 11 colors
+  smiley_Pal, 33 colors
+  btn_Pal, 148 colors
+  btntxt_Pal, 2 colors
+  hanzi_Pal, 41 colors
+  btnima_Pal, 14 colors
+  seal_Pal, 251 colors
+  logo_rrc_Pal, 179 colors
+  logo_palib_Pal, 218 colors
+  font_arial_Pal, 2 colors
+  font_system_Pal, 10 colors
+
+Converted in 0 minutes 0 seconds
+
+Finished !

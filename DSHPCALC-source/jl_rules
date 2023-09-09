@@ -1,0 +1,392 @@
+# ex:set ts=4 sw=4: <- for vi
+################################################################################
+# This set of rules is designed to be included into a makefile, to hide most
+# of the complexity in building an application.  Your makefile needs to define
+# the following variables:
+#
+# SOURCES	:= list of source directory names
+# INCLUDES	:= list of include directory names
+#			   ('include' subdirectory is automatically added)
+# TARGET	:= prefix of binary (.nds file)
+#			   (defaults to directory name)
+#
+# TEXT1 	:= first line of text to show in loaders
+# TEXT2 	:= second line of text to show in loaders
+# TEXT3 	:= third line of text to show in loaders
+# ICON 		:= filename of 16-color bitmap to use as icon in loaders
+#			   (must be relative to current directory)
+#
+# BUILD		:= name of build directory (for object files)
+#			   (defaults to 'build')
+# RELEASE   := name of release directory (for .nds file)
+#			   (defaults to 'Release')
+#
+# If the directory containing the makefile contains a directory called
+# 'include' it is automatically prepended to the list of include directorives for
+# all C/C++ compiles
+#
+# If the directory containing the makefile contains a directory called
+# 'efsroot' libefs is automatically added to the binary and the efsroot
+# directory contents are appended at build time.
+#
+# The makefile may also define one or more of the following, which enable
+# the use of optional libraries.
+#
+# USE_WOOPSI	= use the Woopsi Library
+# USE_FAT		= use libfat
+# USE_PALIB		= use PALib
+#
+# If you do not wish graphic files in your source directories (.bmp, etc) to be
+# converted to .o files, define NO_AUTO_BINARY
+#
+# -----------
+#
+# This script assumes that a number of environment variables are defined.
+#
+# $(DEVKITPRO) points to your devkitPro environment
+# $(DEVKITARM) points to the ARM toolset
+#
+# This script assumes that all libraries are installed under $(DEVKITPRO)
+# in a consistent directory structure.  For example, libfat is assumed to
+# be:
+#	$(DEVKITPRO)/libfat
+#	                   /lib
+#	                   /include
+#	                   /include/nds
+#
+# libnds is expected to be installed in $(DEVKITPRO)/libnds 
+# libfat is expected to be installed in $(DEVKITPRO)/libfat 
+# libefs is expected to be installed in $(DEVKITPRO)/libefs
+# PAlib is expected to be installed in $(DEVKITPRO)/PAlib
+# Woopsi is expected to be installed in $(DEVKITPRO)/libwoopsi
+# 
+# This set of rules is Copyright (C) 2008 Jeff Laing but is available for use
+# in any project commercial or otherwise, without credit, compensation or
+# bug reports.  If you can make a buck off this, email me a photo of your yacht.
+################################################################################
+
+# keep track of the top-most directory we are invoked in so that sub-makes
+# can reference it
+ifeq (0,${MAKELEVEL})
+export _MAKEDIR	:=	$(CURDIR)
+endif
+
+# default a bunch of symbols
+TARGET		?=	$(shell basename $(CURDIR))
+BUILD		?=	build
+RELEASE     ?=  Release
+
+# disable all default rules
+.SUFFIXES:
+
+# ensure that we can see the compiler toolset
+PATH 		:= $(DEVKITARM)/bin:$(PATH)
+
+ifneq ($(BUILD),$(notdir $(CURDIR)))
+
+# from here on, any symbols we want to propagate into the real build must be
+# exported - all the lines above the 'ifneq' are evaluated in both cases...
+
+export USE_WOOPSI USE_FAT USE_EFS USE_PALIB USE_DSWIFI
+
+# check to see if there is an EFSROOT to include
+export EFSROOT	:=	$(wildcard $(CURDIR)/efsroot)
+
+# directory name is used to construct the target.nds filename
+export OUTPUT	:=	$(CURDIR)/$(RELEASE)/$(TARGET)
+
+# name the GNU toolset
+PREFIX			:=	arm-eabi-
+export CC		:=	$(PREFIX)gcc
+export CXX		:=	$(PREFIX)g++
+export AR		:=	$(PREFIX)ar
+export OBJCOPY	:=	$(PREFIX)objcopy
+export LD		:=	$(CXX)
+
+# scan source directory for all possible source files (things we can turn into .o) 
+CFILES			:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.c)))
+CPPFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.cpp)))
+SFILES			:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.s)))
+export OFILES	:=	$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
+
+ifeq ($(NO_AUTO_BINARY),)
+PCXFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.pcx)))
+BINFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.bin)))
+PALFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.pal)))
+RAWFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.raw)))
+MAPFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.map)))
+JPEGFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.jpg)))
+MODFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.mod)))
+GIFFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.gif)))
+BMPFILES		:=	$(foreach dir,$(SOURCES),$(notdir $(wildcard $(dir)/*.bmp)))
+OFILES			+=	$(MAPFILES:.map=.o) $(RAWFILES:.raw=.o) $(PALFILES:.pal=.o)\
+				$(BINFILES:.bin=.o) $(PCXFILES:.pcx=.o) $(JPEGFILES:.jpg=.o)\
+				$(MODFILES:.mod=.o) $(GIFFILES:.gif=.o) $(BMPFILES:.bmp=.o)
+endif
+ 
+#-------------------------------------------------------------------------------
+# standard magic to run the build from a build directory - this works because
+# we poke all the source directories into VPATH
+export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir))
+
+.PHONY: $(BUILD) clean rebuild
+ 
+$(BUILD): $(CURDIR)/$(RELEASE) # $(BUILD)/custom.arm7
+	@[ -d $@ ] || mkdir -p $@
+	@$(MAKE) --no-print-directory -C $(BUILD) -f $(_MAKEDIR)/$(firstword $(MAKEFILE_LIST))
+
+$(CURDIR)/$(RELEASE):
+	@-mkdir -p $(CURDIR)/$(RELEASE)
+ 
+clean:
+	@echo Cleaning... $(TARGET)
+	@rm -fr $(BUILD) $(RELEASE)
+ 
+rebuild: clean $(BUILD)
+
+#-------------------------------------------------------------------------------
+# custom.arm7
+#
+$(BUILD)/custom.arm7:
+	$(MAKE) -C $(DEVKITPRO)/dsapp/customARM7 PROJDIR=$(_MAKEDIR)
+
+#-------------------------------------------------------------------------------
+
+else	# executing in the build directory
+ 
+# architecture we are building for
+ARCH		:=	-mthumb-interwork
+
+# uncomment to generate debugging information
+#MINUSG		:=	-g
+
+# baseline flags for 
+CFLAGS		:=	$(MINUSG) $(ARCH) \
+				-Wall -O2 \
+				-mcpu=arm9tdmi -mtune=arm9tdmi -fomit-frame-pointer \
+				-ffast-math
+
+ASFLAGS		:=	$(MINUSG) $(ARCH)
+LDFLAGS		:=	$(MINUSG) $(ARCH) -mno-fpu
+
+# enable dead-code stripping
+CFLAGS		+=	-ffunction-sections -fdata-sections
+LDFLAGS		+=	-Wl,--gc-sections
+
+# link map (optional)
+LDFLAGS		+=	-Wl,-Map,$(OUTPUT).map
+
+#-------------------------------------------------------------------------------
+# every directory mentioned in INCLUDES and LIBDIRS is expected to have a corresponding
+# ./include directory which needs to be passed with -I to the C(++) compiler
+#-------------------------------------------------------------------------------
+LIBDIRS		+= $(DEVKITPRO)/libnds
+
+# default to the 'include' directory, if there is one
+_INCS		+=	$(wildcard $(CURDIR)/include)
+
+# add all directories specified in INCLUDES and SOURCES
+_INCS		+= $(foreach dir,$(INCLUDES),-I$(CURDIR)/../$(dir))
+_INCS		+= $(foreach dir,$(SOURCES),-I$(CURDIR)/../$(dir))
+
+# add all directories specified in LIBDIRS
+_INCS		+= $(foreach dir,$(LIBDIRS),-I$(dir)/include)
+_INCS		+= $(foreach dir,$(LIBDIRS),-I$(dir)/include/nds)
+
+# and the build directory
+_INCS		+= -I$(CURDIR)/$(BUILD)
+
+#-------------------------------------------------------------------------------
+# every directory mentioned in LIBDIRS is expected to have a corresponding
+# ./lib directory which needs to be passed with -L to the linker
+#-------------------------------------------------------------------------------
+_LPATHS		:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
+
+#-------------------------------------------------------------------------------
+# look at the various options that have been selected and switch in the
+# appropriate -D, -I, -l and -L options
+#-------------------------------------------------------------------------------
+
+_DEFS		:= $(DEFINES)
+_DEPS		:=
+
+# _ARM7BIN 	:= -7 custom.arm7
+
+# MIKMOD?
+
+# use DSWIFI
+ifneq ($(USE_DSWIFI),)
+_DEFS		+= -DUSE_DSWIFI
+_INCS		+= -I$(DEVKITPRO)/dswifi/include
+_LIBS		+= -L$(DEVKITPRO)/dswifi/lib -ldswifi9
+_DEPS		+= $(DEVKITPRO)/dswifi/lib/libdswifi9.a
+endif
+
+# use Woopsi
+ifneq ($(USE_WOOPSI),)
+_INCS		+= -I$(DEVKITPRO)/libwoopsi/include
+_LIBS		+= -L$(DEVKITPRO)/libwoopsi/lib -lwoopsi
+_DEPS		+= $(DEVKITPRO)/libwoopsi/lib/libwoopsi.a
+endif
+
+# use EFS
+ifneq ($(EFSROOT),)
+USE_FAT		:=  1						# make sure we include fat as well
+_DEFS		+= -DUSE_EFS
+_INCS		+= -I$(DEVKITPRO)/libefs/include
+_LIBS		+= -L$(DEVKITPRO)/libefs/lib -lefs
+_DEPS		+= $(DEVKITPRO)/libefs/lib/libefs.a
+_NDSTOOLEFS	:= -d $(EFSROOT)
+endif
+
+# use FAT
+ifneq ($(USE_FAT),)
+_DEFS		+= -DUSE_FAT 
+_INCS		+= -I$(DEVKITPRO)/libfat/include
+_LIBS		+= -L$(DEVKITPRO)/libfat/lib -lfat 
+_DEPS		+= $(DEVKITPRO)/libfat/lib/libfat.a
+endif
+
+# use PALIB
+ifneq ($(USE_PALIB),)
+_DEFS		+= -DUSING_PALIB
+_INCS		+= -I$(DEVKITPRO)/PAlib/include/nds
+_LIBS		+= -L$(DEVKITPRO)/PAlib/lib -lpa9
+_ARM7BIN	:= -7 $(DEVKITPRO)/PAlib/lib/arm7/arm7.bin
+endif
+
+# and of course we need libnds
+_LIBS		+= -lnds9
+
+# this makes it easier to type the ndstool command line
+_BANNER 		:= -b $(CURDIR)/../$(ICON) "$(TEXT1);$(TEXT2);$(TEXT3)"
+
+# we do *not* do -o thing - WinterMute points out that this stops our
+# resultant .nds from working on some loaders.  By default, ndstool puts boot
+# code into the wifi-logospace and since its not visible anywhere else, its
+# downright churlish for us to overwrite it.  If you want to, put it back, but
+# its not the default.
+# _LOGO		:= -o $(CURDIR)/../data/logo_wifi.bmp
+
+#-------------------------------------------------------------------------------
+# rule to build the alternate loader versions - unneeded on R4, etc
+#
+$(OUTPUT).ds.gba	: 	$(OUTPUT).nds
+	@dsbuild $< 
+ifneq ($(EFSROOT),)
+	@$(DEVKITPRO)/libefs/bin/efs $@
+endif
+	@echo Built: $(notdir $@)
+	@cp $(CURDIR)/../$(RELEASE)/$(notdir $@) ../$(RELEASE)/$(notdir $(OUTPUT)).sc.nds 
+	@echo Built: $(notdir $(OUTPUT)).sc.nds
+
+#-------------------------------------------------------------------------------
+# rule to build a .nds binary - forces the link every time because we don't have proper
+# dependencies in here...
+$(OUTPUT).nds		: 	$(OFILES) $(_DEPS)
+	@echo Linking...
+	@$(LD) $(LDFLAGS) -specs=ds_arm9.specs $(OFILES) $(_LPATHS) $(_LIBS) -o $(TARGET).elf
+	@$(OBJCOPY) -O binary $(TARGET).elf $(TARGET).bin
+	@ndstool -c $@ -9 $(TARGET).bin $(_ARM7BIN) $(_LOGO) $(_BANNER) $(_NDSTOOLEFS)
+ifneq ($(EFSROOT),)
+	@$(DEVKITPRO)/libefs/bin/efs $@
+endif
+	@echo Built: $(notdir $(OUTPUT)).nds
+
+#-------------------------------------------------------------------------------
+# rule to compile C++
+#
+%.o : %.cpp
+	@echo Compiling $(notdir $<)
+	@$(CXX) -MMD -MF $*.d -MP -DARM9 $(CFLAGS) $(_DEFS) $(_INCS) -c $< -o$@
+ 
+#-------------------------------------------------------------------------------
+# rule to compile C
+#
+%.o : %.c
+	@echo Compiling $(notdir $<)
+	@$(CC) -MMD -MF $*.d -MP -DARM9 $(CFLAGS) $(_DEFS) $(_INCS) -c $< -o$@
+ 
+#-------------------------------------------------------------------------------
+# rule to compile Assembler
+#
+%.o : %.s
+	@echo Assembling $(notdir $<)
+	@$(CC) -MMD -MF $*.d -MP -DARM9 $(ASFLAGS) $(_DEFS) $(_INCS) -c $< -o$@
+
+#-------------------------------------------------------------------------------
+# utility function to convert arbitrary data file to .o
+#
+define bin2o
+	cp $(<) $(*).tmp
+	$(OBJCOPY) -I binary -O elf32-littlearm -B arm \
+		--rename-section .data=.rodata \
+		--redefine-sym _binary_$*_tmp_start=$*\
+		--redefine-sym _binary_$*_tmp_end=$*_end\
+		--redefine-sym _binary_$*_tmp_size=$*_size\
+		$(*).tmp $(@)
+	echo "extern const u8" $(*)"[];" > $(*).h
+	echo "extern const u32" $(*)_size[]";" >> $(*).h
+	rm $(*).tmp
+endef
+ 
+#-------------------------------------------------------------------------------
+%.o	:	%.pcx
+	@echo Converting $(notdir $<)
+	@$(bin2o)
+ 
+#-------------------------------------------------------------------------------
+%.o	:	%.bin
+	@echo Converting $(notdir $<)
+	@$(bin2o)
+ 
+#-------------------------------------------------------------------------------
+%.o	:	%.raw
+	@echo Converting $(notdir $<)
+	@$(bin2o)
+ 
+#-------------------------------------------------------------------------------
+%.o	:	%.pal
+	@echo Converting $(notdir $<)
+	@$(bin2o)
+ 
+#-------------------------------------------------------------------------------
+%.o	:	%.map
+	@echo Converting $(notdir $<)
+	@$(bin2o)
+
+#-------------------------------------------------------------------------------
+%.o	:	%.mdl
+	@echo Converting $(notdir $<)
+	@$(bin2o)
+
+#-------------------------------------------------------------------------------
+%.o	:	%.jpg
+	@echo Converting $(notdir $<)
+	@$(bin2o)
+
+#-------------------------------------------------------------------------------
+%.o	:	%.mod
+	@echo Converting $(notdir $<)
+	@$(bin2o)
+
+#-------------------------------------------------------------------------------
+%.o	:	%.gif
+	@echo Converting $(notdir $<)
+	@$(bin2o)
+
+#-------------------------------------------------------------------------------
+%.o	:	%.bmp
+	@echo Converting $(notdir $<)
+	@$(bin2o)
+
+#-------------------------------------------------------------------------------
+# now include all the dependency files, one per object file - we assume that the
+# .d file is next to the .o file, which is what our C/C++/Assembler rules are
+# set up to do...
+#
+DEPENDS	:= $(OFILES:.o=.d)
+-include $(DEPENDS) 
+
+endif
+

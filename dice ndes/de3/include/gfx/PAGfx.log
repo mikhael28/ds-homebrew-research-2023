@@ -1,0 +1,69 @@
+PAGfx Converter, by Mollusk     www.palib.com
+If you have suggestions, problems, or anything, please mail me at mollusk@palib.info
+
+Converting PAGfx.ini
+Transparent Color : Magenta
+
+28 backgrounds :
+  cinq : TileBg, 256x192, Pal : cinq_Pal, 182 tiles -> cinq_Tiles and cinq_Map
+  deux : TileBg, 256x192, Pal : deux_Pal, 181 tiles -> deux_Tiles and deux_Map
+  dix : TileBg, 256x192, Pal : dix_Pal, 198 tiles -> dix_Tiles and dix_Map
+  dixhuit : TileBg, 256x192, Pal : dixhuit_Pal, 200 tiles -> dixhuit_Tiles and dixhuit_Map
+  dixneuf : TileBg, 256x192, Pal : dixneuf_Pal, 189 tiles -> dixneuf_Tiles and dixneuf_Map
+  dixsept : TileBg, 256x192, Pal : dixsept_Pal, 183 tiles -> dixsept_Tiles and dixsept_Map
+  douze : TileBg, 256x192, Pal : douze_Pal, 197 tiles -> douze_Tiles and douze_Map
+  face : TileBg, 256x192, Pal : face_Pal, 143 tiles -> face_Tiles and face_Map
+  haut : TileBg, 256x192, Pal : haut_Pal, 257 tiles -> haut_Tiles and haut_Map
+  huit : TileBg, 256x192, Pal : huit_Pal, 185 tiles -> huit_Tiles and huit_Map
+  lancer : TileBg, 256x192, Pal : lancer_Pal, 360 tiles -> lancer_Tiles and lancer_Map
+  menu : TileBg, 256x192, Pal : menu_Pal, 215 tiles -> menu_Tiles and menu_Map
+  neuf : TileBg, 256x192, Pal : neuf_Pal, 180 tiles -> neuf_Tiles and neuf_Map
+  onze : TileBg, 256x192, Pal : onze_Pal, 170 tiles -> onze_Tiles and onze_Map
+  pile : TileBg, 256x192, Pal : pile_Pal, 132 tiles -> pile_Tiles and pile_Map
+  quatorze : TileBg, 256x192, Pal : quatorze_Pal, 181 tiles -> quatorze_Tiles and quatorze_Map
+  quatre : TileBg, 256x192, Pal : quatre_Pal, 181 tiles -> quatre_Tiles and quatre_Map
+  quinze : TileBg, 256x192, Pal : quinze_Pal, 193 tiles -> quinze_Tiles and quinze_Map
+  seize : TileBg, 256x192, Pal : seize_Pal, 190 tiles -> seize_Tiles and seize_Map
+  sept : TileBg, 256x192, Pal : sept_Pal, 172 tiles -> sept_Tiles and sept_Map
+  six : TileBg, 256x192, Pal : six_Pal, 182 tiles -> six_Tiles and six_Map
+  timer : TileBg, 256x192, Pal : timer_Pal, 101 tiles -> timer_Tiles and timer_Map
+  toucher2 : TileBg, 256x192, Pal : toucher2_Pal, 370 tiles -> toucher2_Tiles and toucher2_Map
+  treize : TileBg, 256x192, Pal : treize_Pal, 194 tiles -> treize_Tiles and treize_Map
+  trois : TileBg, 256x192, Pal : trois_Pal, 181 tiles -> trois_Tiles and trois_Map
+  un : TileBg, 256x192, Pal : un_Pal, 168 tiles -> un_Tiles and un_Map
+  vingt : TileBg, 256x192, Pal : vingt_Pal, 209 tiles -> vingt_Tiles and vingt_Map
+  end : TileBg, 256x192, Pal : end_Pal, 237 tiles -> end_Tiles and end_Map
+
+28 palettes :
+  cinq_Pal, 38 colors
+  deux_Pal, 39 colors
+  dix_Pal, 36 colors
+  dixhuit_Pal, 35 colors
+  dixneuf_Pal, 37 colors
+  dixsept_Pal, 38 colors
+  douze_Pal, 37 colors
+  face_Pal, 16 colors
+  haut_Pal, 36 colors
+  huit_Pal, 37 colors
+  lancer_Pal, 38 colors
+  menu_Pal, 4 colors
+  neuf_Pal, 37 colors
+  onze_Pal, 36 colors
+  pile_Pal, 5 colors
+  quatorze_Pal, 38 colors
+  quatre_Pal, 38 colors
+  quinze_Pal, 37 colors
+  seize_Pal, 35 colors
+  sept_Pal, 38 colors
+  six_Pal, 37 colors
+  timer_Pal, 23 colors
+  toucher2_Pal, 39 colors
+  treize_Pal, 35 colors
+  trois_Pal, 38 colors
+  un_Pal, 38 colors
+  vingt_Pal, 37 colors
+  end_Pal, 18 colors
+
+Converted in 0 minutes 5 seconds
+
+Finished !

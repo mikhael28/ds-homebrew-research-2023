@@ -1,0 +1,22 @@
+#! /usr/bin/env python
+#
+# Create all .c/.h files from our graphics files
+#
+import os
+import glob
+
+# regular bitmaps are easy - we convert them with git
+for b in glob.glob("bmp/*.bmp"):
+	(f,e) = os.path.splitext(os.path.basename(b))
+	print f
+	os.spawnlp(
+		os.P_WAIT,
+		"git",		# command to execute
+		"git",		# ARGV[0]
+		b,		# source file
+		"-q",		# quietly
+		"-gu16",	# graphic datatype
+		"-gT!",		# force opaque bit
+		"-ftc",		# file type: .c
+		"-o", f		# output filename
+	)
